@@ -1,0 +1,47 @@
+package nosteam.IdeaProjects.PP_3_1_2_Boot_Security_new.services;
+
+import nosteam.IdeaProjects.PP_3_1_2_Boot_Security_new.dao.UserDao;
+import nosteam.IdeaProjects.PP_3_1_2_Boot_Security_new.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private UserDao userDao;
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<User> allUsers() {
+        return userDao.allUsers();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public User getUser(long id) {
+        return userDao.getUser(id);
+    }
+
+    @Transactional
+    @Override
+    public void addUser(User user) {
+        userDao.addUser(user);
+    }
+
+    @Transactional
+    @Override
+    public void removeUser(User user) {
+        userDao.removeUser(user);
+    }
+
+    @Transactional
+    @Override
+    public void updateUser(User userToUpdate) {
+        userDao.updateUser(userToUpdate);
+    }
+
+}
