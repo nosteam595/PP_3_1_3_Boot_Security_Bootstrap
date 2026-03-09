@@ -39,20 +39,20 @@ public class UserController {
     }
 
     @GetMapping("/user/details")
-    public String showUserInfo(@RequestParam(value = "id", required = false) Long id,
-                               Authentication authentication,
-                               Model model) {
+    public String showUserProfile(@RequestParam(value = "id", required = false) Long id,
+                                  Authentication authentication,
+                                  Model model) {
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
         User currentUser = personDetails.getUser();
         User userToShow;
-        if (id != null && currentUser.getRoles().stream()
-                .anyMatch(r -> r.getName().equals("ROLE_ADMIN"))) {
+        if (id != null && currentUser.getRoles().stream().anyMatch(r -> r.getName().equals("ROLE_ADMIN"))) {
             userToShow = userService.getUser(id);
         } else {
             userToShow = currentUser;
         }
+
         model.addAttribute("user", userToShow);
-        return "userProfile";
+        return "userProfile"; // Возвращаем страницу ПРОСМОТРА
     }
 
     @GetMapping("/add")
