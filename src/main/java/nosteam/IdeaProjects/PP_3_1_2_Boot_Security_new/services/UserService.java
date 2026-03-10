@@ -6,6 +6,7 @@ import java.util.List;
 public interface UserService {
     List<User> allUsers();
     User getUser(long id);
+    public User getUserForProfile(User currentUser, Long id);
     void addUser(User user);
     void removeUser(User user);
     void updateUser(User userToUpdate);

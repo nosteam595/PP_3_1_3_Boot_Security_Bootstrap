@@ -6,7 +6,7 @@ import nosteam.IdeaProjects.PP_3_1_2_Boot_Security_new.model.User;
 import nosteam.IdeaProjects.PP_3_1_2_Boot_Security_new.security.PersonDetails;
 import nosteam.IdeaProjects.PP_3_1_2_Boot_Security_new.services.RoleService;
 import nosteam.IdeaProjects.PP_3_1_2_Boot_Security_new.services.UserService;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,17 +40,9 @@ public class UserController {
 
     @GetMapping("/user/details")
     public String showUserProfile(@RequestParam(value = "id", required = false) Long id,
-                                  Authentication authentication,
+                                  @AuthenticationPrincipal PersonDetails personDetails,
                                   Model model) {
-        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
-        User currentUser = personDetails.getUser();
-        User userToShow;
-        if (id != null && currentUser.getRoles().stream().anyMatch(r -> r.getName().equals("ROLE_ADMIN"))) {
-            userToShow = userService.getUser(id);
-        } else {
-            userToShow = currentUser;
-        }
-
+        User userToShow = userService.getUserForProfile(personDetails.getUser(), id);
         model.addAttribute("user", userToShow);
         return "userProfile";
     }

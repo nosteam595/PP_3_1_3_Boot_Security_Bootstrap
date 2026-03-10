@@ -23,6 +23,17 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public User getUserForProfile(User currentUser, Long id) {
+        boolean isAdmin = currentUser.getRoles().stream()
+                .anyMatch(r -> r.getName().equals("ROLE_ADMIN"));
+
+        if (id != null && isAdmin) {
+            return getUser(id);
+        }
+        return currentUser;
+    }
+
+    @Override
     public void addUser(User user) {
         entityManager.persist(user);
     }
