@@ -28,9 +28,16 @@ public class UserServiceImpl implements UserService {
         return userDao.getUser(id);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public User getUserForProfile(User currentUser, Long id) {
         return userDao.getUserForProfile(currentUser, id);
+    }
+
+    @Transactional
+    @Override
+    public void registerNewUser(User user, List<Long> roleIds) {
+        userDao.registerNewUser(user, roleIds);
     }
 
     @Transactional

@@ -1,6 +1,7 @@
 package nosteam.IdeaProjects.PP_3_1_2_Boot_Security_new.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import java.util.HashSet;
@@ -32,6 +33,7 @@ public class User {
     private int age;
 
     @Column(name = "password", length = 100)
+    @NotBlank(message = "Пароль обязателен")
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)

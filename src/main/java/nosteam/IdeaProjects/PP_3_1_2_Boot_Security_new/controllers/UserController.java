@@ -59,22 +59,11 @@ public class UserController {
                            BindingResult bindingResult,
                            @RequestParam(value = "listRoles", required = false) List<Long> roleIds,
                            Model model) {
-        if (user.getPassword() == null || user.getPassword().isEmpty()) {
-            bindingResult.rejectValue("password", "error.user", "Пароль обязателен при создании");
-        }
         if (bindingResult.hasErrors()) {
             model.addAttribute("allRoles", roleService.getAllRoles());
             return "userAdd";
         }
-        if (roleIds != null) {
-            Set<Role> roles = new HashSet<>();
-            for (Long roleId : roleIds) {
-                roles.add(roleService.getRoleById(roleId));
-            }
-            user.setRoles(roles);
-        }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userService.addUser(user);
+        userService.registerNewUser(user, roleIds);
         return "redirect:/users";
     }
 
