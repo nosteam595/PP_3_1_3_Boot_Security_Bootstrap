@@ -12,14 +12,18 @@
     <div class="container-fluid px-4">
         <span class="navbar-brand">
             <strong th:text="${user.email}">user@mail.ru</strong>
-            <span class="text-secondary"> with roles: </span>
-            <span th:each="role : ${user.roles}" th:text="${role.name.replace('ROLE_', '') + ' '}">USER</span>
+            <span> with roles: </span>
+            <span th:each="role : ${user.roles}"
+                  th:if="${role.name.startsWith('ROLE_')}"
+                  th:text="${role.name.replace('ROLE_', '') + ' '}">
+            </span>
         </span>
         <form th:action="@{/logout}" method="POST" class="d-inline">
             <button type="submit" class="btn btn-link text-secondary text-decoration-none p-0">Logout</button>
         </form>
     </div>
 </nav>
+
 
 <div class="container-fluid mt-3">
     <div class="row">

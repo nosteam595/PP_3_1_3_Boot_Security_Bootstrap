@@ -11,12 +11,14 @@
 <nav class="navbar navbar-dark bg-dark sticky-top shadow-sm">
     <div class="container-fluid px-4">
         <span class="navbar-brand">
-            <strong th:text="${#authentication.name}">admin@mail.ru</strong>
-            <span class="text-secondary"> with roles: </span>
-            <span class="text-secondary" th:each="authority : ${#authentication.authorities}"
-                  th:text="${authority.authority.replace('ROLE_', '') + ' '}"></span>
+            <strong th:text="${#authentication.principal.user.email}">admin@mail.ru</strong>
+            <span> with roles: </span>
+            <span th:each="authority : ${#authentication.authorities}"
+                  th:if="${authority.authority.startsWith('ROLE_')}"
+                  th:text="${authority.authority.replace('ROLE_', '') + ' '}">
+            </span>
         </span>
-        <form th:action="@{/logout}" method="POST">
+        <form th:action="@{/logout}" method="POST" class="d-inline">
             <button type="submit" class="btn btn-link text-secondary text-decoration-none p-0">Logout</button>
         </form>
     </div>
