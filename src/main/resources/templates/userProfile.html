@@ -4,134 +4,45 @@
 <head>
     <meta charset="UTF-8">
     <title>Профиль пользователя</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 50px;
-            margin: 0;
-        }
-        .profile-card {
-            background: white;
-            width: 450px;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        .profile-header {
-            border-bottom: 2px solid #eee;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-        h2 { color: #333; margin: 0; }
-        .info-group {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #fafafa;
-        }
-        .label { font-weight: bold; color: #666; }
-        .value { color: #2c3e50; }
-        .roles-badge {
-            background-color: #e9ecef;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            margin-left: 5px;
-        }
-        .actions {
-            margin-top: 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-        }
-
-        /* Стили кнопок */
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-            text-align: center;
-            transition: opacity 0.2s;
-            box-sizing: border-box;
-        }
-        .btn:hover { opacity: 0.9; }
-
-        .btn-edit { background-color: #f0ad4e; color: white; } /* Оранжевая */
-        .btn-remove { background-color: #d9534f; color: white; } /* Красная */
-        .btn-back { background-color: #5bc0de; color: white; } /* Голубая */
-        .btn-logout { background-color: #333; color: white; } /* Темная */
-    </style>
 </head>
 <body>
 
-<div class="profile-card">
-    <div class="profile-header">
-        <h2 th:text="'Профиль: ' + ${user.firstName}">Профиль</h2>
-    </div>
+<h2 th:text="'Профиль: ' + ${user.firstName}">Профиль</h2>
 
-    <div class="info-group">
-        <span class="label">Имя:</span>
-        <span class="value" th:text="${user.firstName}">Имя</span>
-    </div>
-    <div class="info-group">
-        <span class="label">Фамилия:</span>
-        <span class="value" th:text="${user.lastName}">Фамилия</span>
-    </div>
-    <div class="info-group">
-        <span class="label">Email:</span>
-        <span class="value" th:text="${user.email}">Email</span>
-    </div>
-    <div class="info-group">
-        <span class="label">Возраст:</span>
-        <span class="value" th:text="${user.age}">0</span>
-    </div>
-    <div class="info-group">
-        <span class="label">Роли:</span>
-        <div class="value">
-            <span th:each="role : ${user.roles}"
-                  th:if="${role.name.startsWith('ROLE_')}"
-                  class="roles-badge"
-                  th:text="${role.name.replace('ROLE_', '')}">USER</span>
-        </div>
-    </div>
+<p>
+    <b>Имя:</b> <span th:text="${user.firstName}">Имя</span><br>
+    <b>Фамилия:</b> <span th:text="${user.lastName}">Фамилия</span><br>
+    <b>Email:</b> <span th:text="${user.email}">Email</span><br>
+    <b>Возраст:</b> <span th:text="${user.age}">0</span><br>
+    <b>Роли:</b>
+    <span th:each="role : ${user.roles}"
+          th:if="${role.name.startsWith('ROLE_')}"
+          th:text="${role.name.replace('ROLE_', '') + ' '}">USER</span>
+</p>
 
-    <div class="actions">
-        <!-- БЛОК ДЛЯ АДМИНА -->
-        <div sec:authorize="hasRole('ADMIN')" style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
-            <!-- Кнопка перехода на форму редактирования -->
-            <a th:href="@{/users/edit(id=${user.id})}" class="btn btn-edit">
-                Редактировать пользователя
-            </a>
+<hr> <!-- Разделительная линия для визуального порядка -->
 
-            <!-- Форма удаления пользователя -->
-            <form th:action="@{/users/remove}" method="POST" style="width: 100%;">
-                <input type="hidden" name="id" th:value="${user.id}" />
-                <button type="submit" class="btn btn-remove"
-                        onclick="return confirm('Вы уверены, что хотите безвозвратно удалить этого пользователя?')">
-                    Удалить пользователя
-                </button>
-            </form>
+<!-- БЛОК ДЛЯ АДМИНА -->
+<div sec:authorize="hasRole('ADMIN')">
+    <a th:href="@{/users/edit(id=${user.id})}">Редактировать пользователя</a>
+    <br><br>
 
-            <!-- Кнопка возврата к таблице -->
-            <a th:href="@{/users}" class="btn btn-back">Назад ко всем пользователям</a>
-        </div>
+    <form th:action="@{/users/remove}" method="POST">
+        <input type="hidden" name="id" th:value="${user.id}" />
+        <button type="submit" onclick="return confirm('Вы уверены?')">
+            Удалить пользователя
+        </button>
+    </form>
+    <br>
 
-        <!-- ВЫХОД (виден всем) -->
-        <form th:action="@{/logout}" method="POST" style="width: 100%;">
-            <button type="submit" class="btn btn-logout">Выйти из системы</button>
-        </form>
-    </div>
+    <a th:href="@{/users}">Назад ко всем пользователям</a>
+    <br><br>
 </div>
+
+<!-- ВЫХОД (виден всем) -->
+<form th:action="@{/logout}" method="POST">
+    <button type="submit">Выйти из системы</button>
+</form>
 
 </body>
 </html>

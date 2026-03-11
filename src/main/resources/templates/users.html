@@ -3,90 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Список пользователей</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 40px;
-            background-color: #fcfcfc;
-        }
-
-        h2 { color: #333; }
-
-        table {
-            width: 90%;
-            max-width: 1000px;
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-
-        th {
-            background-color: #f8f9fa;
-            color: #555;
-            text-transform: uppercase;
-            font-size: 13px;
-            letter-spacing: 0.5px;
-        }
-
-        .roles-badge {
-            background-color: #e9ecef;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 11px;
-            margin-right: 3px;
-        }
-
-        tbody tr:hover {
-            background-color: #f1f7ff;
-        }
-
-        td a {
-            color: #007bff;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        td a:hover {
-            text-decoration: underline;
-        }
-
-        .btn-add {
-            margin-top: 25px;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: bold;
-            background-color: #28a745;
-            color: white;
-            display: inline-block;
-        }
-
-        .btn-logout {
-            margin-top: 15px;
-            padding: 10px 20px;
-            background-color: #dc3545;
-            color: white;
-            border-radius: 4px;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-        }
-    </style>
 </head>
 <body>
 
 <h2>Таблица пользователей</h2>
 
-<table>
+<table border="1">
     <thead>
     <tr>
         <th>ID</th>
@@ -101,34 +23,27 @@
     <tr th:each="user : ${users}">
         <td th:text="${user.id}">1</td>
         <td>
-            <!-- ИСПРАВЛЕНО: Ссылка ведет на /user/details с передачей ID -->
             <a th:href="@{/users/user/details(id=${user.id})}" th:text="${user.firstName}">Иван</a>
         </td>
         <td th:text="${user.lastName}">Иванов</td>
         <td th:text="${user.email}">ivan@mail.com</td>
         <td th:text="${user.age}">25</td>
         <td>
-            <!-- Добавлено отображение ролей для наглядности -->
-            <span th:each="role : ${user.roles}"
-                  th:if="${role.name.startsWith('ROLE_')}"
-                  class="roles-badge"
-                  th:text="${role.name.replace('ROLE_', '')}"></span>
+                    <span th:each="role : ${user.roles}"
+                          th:if="${role.name.startsWith('ROLE_')}"
+                          th:text="${role.name.replace('ROLE_', '') + ' '}"></span>
         </td>
     </tr>
     </tbody>
 </table>
 
-<div style="display: flex; flex-direction: column; align-items: center;">
-    <a th:href="@{/users/add}" class="btn-add">
-        + Добавить нового пользователя
-    </a>
+<p>
+    <a th:href="@{/users/add}">+ Добавить нового пользователя</a>
+</p>
 
-    <form th:action="@{/logout}" method="post">
-        <button type="submit" class="btn-logout">
-            Выйти из системы
-        </button>
-    </form>
-</div>
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Выйти из системы</button>
+</form>
 
 </body>
 </html>
