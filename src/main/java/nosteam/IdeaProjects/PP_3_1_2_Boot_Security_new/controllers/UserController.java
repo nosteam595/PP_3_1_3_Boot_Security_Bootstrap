@@ -31,8 +31,10 @@ public class UserController {
     }
 
     @GetMapping
-    public String getAllUsers(ModelMap modelMap) {
-        modelMap.addAttribute("users", userService.allUsers());
+    public String getAllUsers(Model model) {
+        model.addAttribute("users", userService.allUsers());
+        model.addAttribute("newUser", new User());
+        model.addAttribute("allRoles", roleService.getAllRoles());
         return "users";
     }
 
@@ -45,21 +47,15 @@ public class UserController {
         return "userProfile";
     }
 
-    @GetMapping("/add")
-    public String addNewUser(ModelMap modelMap) {
-        modelMap.addAttribute("user", new User());
-        modelMap.addAttribute("allRoles", roleService.getAllRoles());
-        return "userAdd";
-    }
-
     @PostMapping("/save")
-    public String saveUser(@ModelAttribute("user") @Valid User user,
+    public String saveUser(@ModelAttribute("newUser") @Valid User user,
                            BindingResult bindingResult,
                            @RequestParam(value = "listRoles", required = false) List<Long> roleIds,
                            Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("users", userService.allUsers());
             model.addAttribute("allRoles", roleService.getAllRoles());
-            return "userAdd";
+            return "users";
         }
         userService.addUser(user, roleIds);
         return "redirect:/users";
